@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker-practice/actions-setup-docker@master
+      - uses: azure/docker-login@v1
+        with:
+          # login-server: contoso.azurecr.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ghcr.io
+          username: khs1994
+          password: ${{ secrets.GHCR_IO_TOKEN }}
+      - run: |
+          export GITHUB_TAG=$(echo $GITHUB_REF | cut -d '/' -f 3)
+
+          docker buildx build \
+          -t khs1994/acme:"${GITHUB_TAG}" \
+          -t khs1994/acme:latest \
+          -t ${REGISTRY_MIRROR}/khs1994/acme:"${GITHUB_TAG}" \
+          -t ${REGISTRY_MIRROR}/khs1994/acme:latest \
+          --cache-from=ghcr.io/khs1994/acme:cache \
+          --cache-to=ghcr.io/khs1994/acme:cache \
+          Dockerfile
+        env:
+          REGISTRY_MIRROR: ghcr.io
