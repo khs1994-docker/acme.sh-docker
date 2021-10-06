@@ -44,7 +44,7 @@ jobs:
             ${DOCKER_PUSH} \
             --cache-from=ghcr.io/khs1994/acme:cache \
             --cache-to=ghcr.io/khs1994/acme:cache \
-            Dockerfile
+            .
         env:
           REGISTRY_MIRROR: ghcr.io
           GITHUB_EVENT_NAME: ${{github.event_name}}
