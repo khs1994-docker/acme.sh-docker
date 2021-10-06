@@ -24,7 +24,7 @@ jobs:
       - run: |
           export GITHUB_TAG=$(echo $GITHUB_REF | cut -d '/' -f 3)
 
-          if ! [ $GITHUB_EVENT_NAME = 'workflow_dispatch'];then
+          if ! [ $GITHUB_EVENT_NAME = 'workflow_dispatch' ];then
             DOCKER_IMAGE="-t khs1994/acme:${GITHUB_TAG} -t ${REGISTRY_MIRROR}/khs1994/acme:${GITHUB_TAG}"
           fi
 
